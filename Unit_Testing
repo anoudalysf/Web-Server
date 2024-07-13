@@ -1,0 +1,57 @@
+For the unit testing, I will be showing the units' responses with their outputs in the client's side to ensure they're working properly 
+(these responses are responses given in the output of the run in the terminal)
+
+[GET request output]
+            Simulating GET request...
+            Received response for GET request:
+            HTTP/1.0 200 OK
+            
+            Hello from GET request handler
+
+[correct POST request output]
+            Simulating POST request with correct data...
+            Sent POST request with data:
+            {"name": "Jane Doe", "age": 25, "city": "New York"}
+            Received response for POST request:
+            HTTP/1.0 200 OK
+            
+            Received POST data: {'name': 'Jane Doe', 'age': 25, 'city': 'New York'}
+
+[incorrect POST request output]
+            Simulating POST request with incorrect data...
+            Sent POST request with incorrect data:
+            {"age": 25, "city": "New York"}
+            Received response for POST request with incorrect data:
+            HTTP/1.0 400 Bad Request
+            
+            Missing required keys: name
+
+[unauthorized POST request output]
+            Simulating POST request with correct data...
+            Sent POST request with data:
+            {"name": "Jane Doe", "age": 25, "city": "New York"}
+            Received response for POST request:
+            HTTP/1.0 401 Unauthorized
+            
+            Authorization Required
+
+[The server's output]
+             2024-07-13 18:17:08:
+            
+            GET / HTTP/1.1
+            Content-Type: application/json
+            Authorization: my_secret_token
+            
+            {"name": "Jane Doe", "age": 25, "city": "New York"} 2024-07-13 18:17:09:
+            
+            POST / HTTP/1.1
+            Content-Type: application/json
+            Content-Length: 51
+            Authorization: my_secret_token
+            
+            {"age": 25, "city": "New York"} 2024-07-13 18:17:10:
+            
+            POST / HTTP/1.1
+            Content-Type: application/json
+            Content-Length: 31
+            Authorization: my_secret_token
