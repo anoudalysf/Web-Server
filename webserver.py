@@ -73,7 +73,7 @@ class BaseRequestHandler(ABC):
 class GetRequestHandler(BaseRequestHandler):
     @log_request
     async def handle_request(self, request_data):
-        await asyncio.sleep(1)
+        # await asyncio.sleep(1)
         return 'HTTP/1.0 200 OK\n\nHello from GET request handler'
 
 class PostRequestHandler(BaseRequestHandler):
@@ -81,7 +81,7 @@ class PostRequestHandler(BaseRequestHandler):
     @authorize_request
     async def handle_request(self, request_data, headers):
         try:
-            await asyncio.sleep(1)
+            # await asyncio.sleep(1)
             # extract json data from request_data
             json_start_index = request_data.find('{')
             if json_start_index != -1:
@@ -110,6 +110,13 @@ async def response_generator(response_code, data=None):
     else:
         yield f'HTTP/1.0 {response_code} OK\n\n'
 
+async def stream_data(data):
+    chunk_size = 1024  
+    for i in range(0, len(data), chunk_size):
+        await asyncio.sleep(0.5)
+        yield data[i:i+chunk_size]
+
+
 # handling the client responses
 async def handle_client_request(client_reader, client_writer):
     try:
@@ -133,23 +140,26 @@ async def handle_client_request(client_reader, client_writer):
             print(f'{header}: {value}')
         print()
 
-        client_writer.write(response_data.encode())
-        await client_writer.drain()
-    
+        # use the streaming generator to send response data
+        async for chunk in stream_data(response_data):
+            client_writer.write(chunk.encode())
+            await client_writer.drain()
+
     except asyncio.TimeoutError:
         response_data = 'HTTP/1.0 408 Request Timeout\n\nTimeout waiting for client request.'
         client_writer.write(response_data.encode())
         await client_writer.drain()
     
-    # when they dont have authorization (dont have the required key)
     except AuthorizationError:
         response_data = 'HTTP/1.0 401 Unauthorized\n\nAuthorization Required'
         client_writer.write(response_data.encode())
         await client_writer.drain()
+    
     except Exception as e:
         response_data = f'HTTP/1.0 500 Internal Server Error\n\n{str(e)}'
         client_writer.write(response_data.encode())
         await client_writer.drain()
+    
     finally:
         client_writer.close()
 
