@@ -4,3 +4,8 @@ Afterwards, split the terminal in 2 and run the client.py file. The client file 
 
 https://github.com/user-attachments/assets/4e9f0f95-6a3f-499f-b1e8-6c71fbb15b4c
 
+The unit test:
+
+
+https://github.com/user-attachments/assets/c11d290e-1a99-4aac-8897-50963f6d232c
+
