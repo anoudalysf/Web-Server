@@ -55,3 +55,18 @@ For the unit testing, I will be showing the units' responses with their outputs 
             Content-Type: application/json
             Content-Length: 31
             Authorization: my_secret_token
+
+[singleton test]
+            through this test:
+            def test_singleton():
+            instance1 = ServerContextManager()
+            instance2 = ServerContextManager()
+            assert instance1 is instance2, "Not the same"
+            print("Singleton test passed.")
+
+            test_singleton()
+
+            we successfully got in the output:
+            Singleton test passed.
+
+
